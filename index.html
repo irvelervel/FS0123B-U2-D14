@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>EPICODE Agenda</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">EPICODE Agenda</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="./index.html"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./backoffice.html">Backoffice</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <h1 class="text-center my-4">Eventi in agenda</h1>
+      <div class="row justify-content-center">
+        <div class="col col-12 col-md-8">
+          <div
+            class="spinner-border text-warning d-block mx-auto mb-4"
+            role="status"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <ul class="list-group">
+            <!-- <li class="list-group-item">An item</li>
+            <li class="list-group-item">A second item</li>
+            <li class="list-group-item">A third item</li>
+            <li class="list-group-item">A fourth item</li>
+            <li class="list-group-item">And a fifth one</li> -->
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      const AGENDA_URL = 'https://striveschool-api.herokuapp.com/api/agenda/'
+
+      const displayEvents = function (events) {
+        // qui creiamo i <li> a partire dall'array di eventi e li inseriamo nella pagina
+        console.log(events)
+        events.forEach((ev) => {
+          const newLi = document.createElement('li')
+          newLi.classList.add(
+            'list-group-item',
+            'd-flex',
+            'justify-content-between'
+          )
+          newLi.innerHTML = `
+            <span>
+                <span>${ev.name}</span>
+            </span>
+            <span>
+                <span class="badge bg-secondary">${ev.price}€</span>
+                <a href="./details.html?eventId=${ev._id}" class="btn btn-success">DETTAGLI</a>
+                <a href="./backoffice.html?eventId=${ev._id}" class="btn btn-info">MODIFICA</a>
+            </span>
+          `
+          let ulReference = document.getElementsByClassName('list-group')[0]
+          ulReference.appendChild(newLi)
+        })
+      }
+
+      const hideSpinner = function () {
+        let spinnerReference = document.getElementsByClassName(
+          'spinner-border text-warning'
+        )[0]
+        spinnerReference.classList.add('d-none')
+      }
+
+      const getEvents = function () {
+        fetch(AGENDA_URL)
+          .then((response) => {
+            console.log(response)
+            if (response.ok) {
+              return response.json()
+            } else {
+              return new Error('Errore nella gestione della chiamata')
+              // e vengo catapultato nel blocco catch
+            }
+          })
+          .then((events) => {
+            console.log('EVENTI', events)
+            // qua devo ciclare gli eventi e manipolare il DOM
+
+            // qua dovrei nascondere lo spinner
+
+            hideSpinner()
+            displayEvents(events)
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
+
+      getEvents()
+    </script>
+  </body>
+</html>
